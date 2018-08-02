@@ -1,6 +1,6 @@
 {% extends 'index.html' %}
 {% block 'contents' %}
-<form action = "{% url 'journal:newresource' %}" method="post">
+<form method="post">
     {% csrf_token %}
     {{form}}
     <input class="btn btn-danger" value='Submit' type="submit"\>

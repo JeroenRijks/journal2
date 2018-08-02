@@ -20,5 +20,6 @@ from journal import views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
-    url(r'^newresource/', views.newresource, name='newresource'),
+    url(r'^newresource/$', views.newresource, name='resource'),
+    url(r'^newresource/(?P<res_id>[0-9]+)$', views.newresource, name='resource'),
 ]
