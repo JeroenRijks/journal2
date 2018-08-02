@@ -20,4 +20,5 @@ from journal import views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
+    url(r'^newresource/', views.newresource, name='newresource'),
 ]

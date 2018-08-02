@@ -1,0 +1,26 @@
+{% extends 'index.html' %}
+
+{% block 'pageheader' %}
+homepage
+{% endblock %}
+
+{% block 'contents' %}
+<table class="table">
+    <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Link</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in items %}
+            <tr>
+            <td>{{item.name}}</td>
+            <td><a class="btn btn-danger" href="{{item.link}}">{{item.name}}</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a class="btn btn-danger" >Add to table</a>
+{% endblock %}
