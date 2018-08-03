@@ -1,8 +1,66 @@
 {% extends 'index.html' %}
+{% block 'headerscripts' %}
+<script>
+    function showModal(){
+        $("#tag_modal").modal('show');
+    }
+
+    function AJAX_new_tag(){
+        var tag_name = $(".modal-body > #id_name").val();
+        tag_string = tag_name.toString();
+        console.log(tag_string);
+        $.ajax({
+                        url: "{% url 'journal:AJAX_tag_create' %}",
+                        type: "POST",
+                        data: {
+                            'csrfmiddlewaretoken' : '{{ csrf_token }}',
+                            tag_name : tag_string,
+                        },
+                        success: function(json){
+                            $("#tag_modal").modal('hide');
+                            window.location.reload();
+                        },
+                        error: function(json){
+                            console.log("fail");                        }
+                    });
+
+
+    }
+</script>
+{% endblock %}
+
 {% block 'contents' %}
 <form method="post">
     {% csrf_token %}
     {{form}}
+    <button type="button" class="fa fa-plus" onclick="showModal();"></button>
     <input class="btn btn-danger" value='Submit' type="submit"\>
+
 </form>
+
+
+{% endblock %}
+
+{% block 'modal' %}
+
+<div class="modal" id="tag_modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New tag</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{tagform}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="AJAX_new_tag();">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
