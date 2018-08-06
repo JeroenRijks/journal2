@@ -20,8 +20,10 @@ from journal import views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
+    url(r'^tagpage/$', views.TagPage.as_view(), name='tagpage'),
     url(r'^newresource/$', views.newresource, name='resource'),
     url(r'^newresource/(?P<res_id>[0-9]+)$', views.newresource, name='resource'),
     url(r'^deleteresource/(?P<res_id>[0-9]+)$', views.deleteresource, name='deleteresource'),
     url(r'^AJAX_tag_create/$', views.AJAX_tag_create, name='AJAX_tag_create'),
+
 ]

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+from django.views import View
 from journal.models import Resource, Tag
 from journal.forms import ResourceForm, TagForm
 
@@ -60,8 +61,14 @@ def AJAX_tag_create(request):
     if tag_name:
         print(tag_name)
         Tag.objects.create(name=tag_name)
-        # Do I need a line here to link this Tag object to the Resource object?
     full_response = {
     "success": True,
     }
     return JsonResponse(data=full_response, safe=False)
+
+# Use a class based view for tags
+class TagPage(View):
+    # form_class = TagForm
+    def get(self, request):
+        taginfo = Tag.objects.all()
+        return render(request, 'tagpage.html', {'name' : 'Jeroen', 'tags' : taginfo}) #change this line
