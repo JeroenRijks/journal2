@@ -18,7 +18,7 @@
 {% block 'headerscripts' %}
 {% endblock %}
 <meta charset="UTF-8">
-<title>Journal Title</title>
+<title>{{name}}'s app</title>
 
 
 <nav class="navbar bg-dark">
@@ -34,11 +34,8 @@
 <body>
 
 <h1>
-    {% block 'pageheader' %}Header of my journal{% endblock %}
+    {% block 'pageheader' %}{% endblock %}
 </h1>
-
-Main page in my journal, by {{name}}.
-
 
 {% block 'contents' %}
 

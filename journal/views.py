@@ -8,24 +8,31 @@ from journal.forms import ResourceForm, TagForm
 
 def home(request):
     resources = Resource.objects.all()
-    return render(request, 'home.html', {'name': 'jeroen','items': resources})
+    return render(request, 'home.html', {'name': 'Jeroen','items': resources})
 
 
 def newresource(request, res_id=None):
-    print res_id
     if res_id:
         resource = Resource.objects.get(id=res_id)
+        # tags = resource.tags
+        # print tags
+        # tagtest=Tag.objects.filter(name=resource.tags)
+        # print tagtest
     else:
         resource=None
-    print resource
+    print res_id, resource
     tag_form = TagForm()
-    if request.POST:
+
+    if request.POST:      # This is for the red submit button
+        print "POST"
         print request.POST
-        if resource:
+        if resource:        # If it exists, edit that instance. Else make a new one.
+            print "resource exists"
             form = ResourceForm(data=request.POST, instance=resource)
         else:
             form = ResourceForm(data=request.POST)
         if form.is_valid():
+            print "save"
             form.save()
             return redirect('journal:home')
     else:
@@ -33,8 +40,7 @@ def newresource(request, res_id=None):
             form = ResourceForm(instance=resource)
         else:
             form = ResourceForm()
-    return render(request, 'form.html', {'tagform':tag_form, 'form':form, 'name': 'jeroen'})
-
+    return render(request, 'form.html', {'tagform':tag_form, 'form':form, 'name': 'Jeroen'})
 
 
 def deleteresource(request, res_id=None):
@@ -50,14 +56,12 @@ def deleteresource(request, res_id=None):
     return redirect('journal:home')
 
 def AJAX_tag_create(request):
-
     tag_name = request.POST.get('tag_name', None)
     if tag_name:
         print(tag_name)
         Tag.objects.create(name=tag_name)
+        # Do I need a line here to link this Tag object to the Resource object?
     full_response = {
     "success": True,
-
     }
     return JsonResponse(data=full_response, safe=False)
-

@@ -1,16 +1,20 @@
 {% extends 'index.html' %}
 
 {% block 'pageheader' %}
-homepage
+Homepage
 {% endblock %}
 
+
 {% block 'contents' %}
+
+Main page in my journal, by {{name}}.
 
 <table class="table">
     <thead>
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Tip</th>
+          <th scope="col">Tags</th>
           <th scope="col">Link</th>
         </tr>
     </thead>
@@ -20,6 +24,10 @@ homepage
             <tr>
                 <td><a href="{% url 'journal:resource' res_id=item.id %}">{{item.name}}</a></td>
                 <td>{{item.tip}}</td>
+                <td>{% for tag in item.tags.all %}
+                        {{tag.name}}, {% empty %} No tags
+                    {% endfor %}
+                </td>
                 <td><a class="btn btn-danger" href="{{item.link}}">{{item.name}}</a></td>
                 <td><form method="post" action="{% url 'journal:deleteresource' res_id=item.id %}">
                 {% csrf_token %}
@@ -32,6 +40,6 @@ homepage
     </tbody>
 </table>
 
-<a class="btn btn-danger" href="{% url 'journal:resource' %}">Add to table</a>
+<a class="btn btn-danger" href="{% url 'journal:resource' %}">Add a new tip</a>
 {% endblock %}
 

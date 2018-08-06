@@ -30,6 +30,9 @@
 {% endblock %}
 
 {% block 'contents' %}
+
+Form page in my journal, by {{name}}.
+
 <form method="post">
     {% csrf_token %}
     {{form}}
