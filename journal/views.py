@@ -56,6 +56,7 @@ def deleteresource(request, res_id=None):
             resource.delete()
     return redirect('journal:home')
 
+
 def AJAX_tag_create(request):
     tag_name = request.POST.get('tag_name', None)
     if tag_name:
@@ -66,9 +67,19 @@ def AJAX_tag_create(request):
     }
     return JsonResponse(data=full_response, safe=False)
 
+
 # Use a class based view for tags
-class TagPage(View):
+class TagList(View):
     # form_class = TagForm
     def get(self, request):
         taginfo = Tag.objects.all()
-        return render(request, 'tagpage.html', {'name' : 'Jeroen', 'tags' : taginfo}) #change this line
+        resources = Resource.objects.all()
+        return render(request, 'taglist.html', {'name' : 'Jeroen', 'tags' : taginfo, 'items':resources})
+
+
+# class TagEditing(View):
+#     # form_class = TagForm
+#     def get(self, request):
+#         taginfo = Tag.objects.all()
+#         resources = Resource.objects.all()
+#         return render(request, 'taglist.html', {'name': 'Jeroen', 'tags': taginfo, 'items': resources})

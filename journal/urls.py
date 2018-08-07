@@ -20,7 +20,7 @@ from journal import views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
-    url(r'^tagpage/$', views.TagPage.as_view(), name='tagpage'),
+    url(r'^taglist/$', views.TagList.as_view(), name='taglist'),
     url(r'^newresource/$', views.newresource, name='resource'),
     url(r'^newresource/(?P<res_id>[0-9]+)$', views.newresource, name='resource'),
     url(r'^deleteresource/(?P<res_id>[0-9]+)$', views.deleteresource, name='deleteresource'),

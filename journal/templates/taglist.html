@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+{% block 'pageheader' %}
+{% endblock %}
+
+
+{% block 'contents' %}
+
+List of tags in my journal, by {{name}}.
+
+<table class="table">
+    <thead>
+        <tr>
+          <th scope="col">Tag name</th>
+          <th scope="col">Linked tip names</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tag in tags %}
+
+            <tr>
+                <td>{{tag.name}}</td>
+                <td>{% for item in items %}
+                    {% for linked in item.tags.all %}
+                    {% if linked.name == tag.name %}
+                    {{item.name}},
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!--<a class="btn btn-danger" href="{% url 'journal:resource' %}">Add a new tip</a>-->
+{% endblock %}
+
