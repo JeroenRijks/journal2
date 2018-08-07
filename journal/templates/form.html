@@ -23,8 +23,6 @@
                         error: function(json){
                             console.log("fail");                        }
                     });
-
-
     }
 </script>
 {% endblock %}
@@ -36,9 +34,8 @@ Form page in my journal, by {{name}}.
 <form method="post">
     {% csrf_token %}
     {{form}}
-    <button type="button" class="fa fa-plus" onclick="showModal();"></button>
+    <i type="button" class="fa fa-plus" onclick="showModal();"></i>
     <input class="btn btn-danger" value='Submit' type="submit"\>
-
 </form>
 
 

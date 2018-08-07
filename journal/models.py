@@ -7,6 +7,10 @@ from django.db import models
 class Tag(models.Model):
     name = models.CharField(max_length = 200)
 
+    # def get_related_resources(self):
+    #     return Resource.objects.filter(Tag__contains=self)
+    # THIS IS THE MORE EFFICIENT TAG-LIST LIST OF RELATED RESOURCES
+
     def __str__(self):
         return self.name
 

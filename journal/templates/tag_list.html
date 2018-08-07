@@ -12,13 +12,14 @@ List of tags in my journal, by {{name}}.
         <tr>
           <th scope="col">Tag name</th>
           <th scope="col">Linked tip names</th>
+          <th scope="col">Delete</th>
         </tr>
     </thead>
     <tbody>
         {% for tag in tags %}
 
             <tr>
-                <td>{{tag.name}}</td>
+                <td><a href="{% url 'journal:tag_edit' tag_id=tag.id %}" >{{tag.name}}</td>
                 <td>{% for item in items %}
                     {% for linked in item.tags.all %}
                     {% if linked.name == tag.name %}
@@ -27,11 +28,16 @@ List of tags in my journal, by {{name}}.
                     {% endfor %}
                     {% endfor %}
                 </td>
+                <td><form method="post" action="{% url 'journal:deletetag' tag_id=tag.id %}">
+                    {% csrf_token %}<button type="submit"> <i class="fa fa-trash"></i></button>
+                </form></td>
+
             </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<!--<a class="btn btn-danger" href="{% url 'journal:resource' %}">Add a new tip</a>-->
+
+<a class="btn btn-danger" href="{% url 'journal:tag_edit' %}">Create a tag</a>
 {% endblock %}
 

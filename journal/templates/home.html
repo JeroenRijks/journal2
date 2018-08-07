@@ -1,6 +1,5 @@
 {% extends 'index.html' %}
 {% block 'pageheader' %}
-Homepage
 {% endblock %}
 
 
@@ -15,6 +14,7 @@ Main page in my journal, by {{name}}.
           <th scope="col">Tip</th>
           <th scope="col">Tags</th>
           <th scope="col">Link</th>
+          <th scope="col">Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -30,7 +30,7 @@ Main page in my journal, by {{name}}.
                 <td><a class="btn btn-danger" href="{{item.link}}">{{item.name}}</a></td>
                 <td><form method="post" action="{% url 'journal:deleteresource' res_id=item.id %}">
                 {% csrf_token %}
-                <input class="btn btn-danger" value='Delete' type="submit"\>
+                <button class="fa fa-trash" type="submit"></button>
                 </form></td>
 
 

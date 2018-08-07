@@ -1,0 +1,14 @@
+{% extends 'index.html' %}
+
+{% block 'contents' %}
+
+Tag editing page in my journal.
+
+<form method="post">
+    {% csrf_token %}
+    {{tag_form}}
+    <input class="btn btn-danger" value='Submit' type="submit"\>
+</form>
+
+
+{% endblock %}

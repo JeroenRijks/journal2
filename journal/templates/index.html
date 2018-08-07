@@ -22,9 +22,10 @@
 
 
 <nav class="navbar bg-dark">
-  <a class="navbar-brand" href="{% url 'journal:home' %}">Home</a>
-  <a class="navbar-brand" href="{% url 'journal:resource' %}">Add a new resource</a>
-  <a class="navbar-brand" href="{% url 'journal:taglist' %}">Go to the tag list</a>
+  <a class="navbar-brand" href="{% url 'journal:home' %}">List of tips</a>
+  <a class="navbar-brand" href="{% url 'journal:resource' %}">Create a tip</a>
+  <a class="navbar-brand" href="{% url 'journal:tag_list' %}">List of tags</a>
+  <a class="navbar-brand" href="{% url 'journal:tag_edit' %}">Create a tag</a>
 </nav>
 </head>
 
