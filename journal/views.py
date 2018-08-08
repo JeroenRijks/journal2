@@ -59,8 +59,7 @@ class TagList(View):
 
     def get(self, request):
         taginfo = Tag.objects.all()
-        resources = Resource.objects.all()
-        return render(request, 'tag_list.html', {'name' : 'Jeroen', 'tags' : taginfo, 'items':resources})
+        return render(request, 'tag_list.html', {'name' : 'Jeroen', 'tags' : taginfo})
 
     def post(self, request,tag_id=None):    # Only post method on this page is a delete function.
         if tag_id:
