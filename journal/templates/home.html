@@ -6,7 +6,9 @@
 {% block 'contents' %}
 
 Main page in my journal, by {{name}}.
-
+{% if tag %}
+    <p>Only displaying tips related to {{tag.name}}</p>
+{% endif %}
 <table class="table">
     <thead>
         <tr>
@@ -24,7 +26,10 @@ Main page in my journal, by {{name}}.
                 <td><a href="{% url 'journal:resource' res_id=item.id %}">{{item.name}}</a></td>
                 <td>{{item.tip}}</td>
                 <td>{% for tag in item.tags.all %}
-                        {{tag.name}}, {% empty %} No tags
+                    <a href="{% url 'journal:home' tag.id %}">{{tag.name}}</a>
+                    {% if not forloop.last %}
+                    , {% endif %}
+                    {% empty %} No tags
                     {% endfor %}
                 </td>
                 <td><a class="btn btn-danger" href="{{item.link}}">{{item.name}}</a></td>

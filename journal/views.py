@@ -8,9 +8,15 @@ from journal.models import Resource, Tag
 from journal.forms import ResourceForm, TagForm
 
 
-def home(request):
+def home(request,tag_id=None):
+
     resources = Resource.objects.all()
-    return render(request, 'home.html', {'name': 'Jeroen','items': resources})
+    if tag_id:
+        resources=resources.filter(tags=tag_id)
+        tag = Tag.objects.get(id=tag_id)
+    else:
+        tag=None
+    return render(request, 'home.html', {'name': 'Jeroen','items': resources,'tag':tag})
 
 
 def newresource(request, res_id=None):
@@ -35,6 +41,7 @@ def newresource(request, res_id=None):
             form = ResourceForm()
     return render(request, 'form.html', {'tagform':tag_form, 'form':form, 'name': 'Jeroen'})
 
+
 def deleteresource(request, res_id=None):
     if res_id:
         resource = Resource.objects.get(id=res_id)
@@ -45,6 +52,7 @@ def deleteresource(request, res_id=None):
         if resource:
             resource.delete()
     return redirect('journal:home')
+
 
 def AJAX_tag_create(request):
     tag_name = request.POST.get('tag_name', None)
