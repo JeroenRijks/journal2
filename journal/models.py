@@ -13,7 +13,6 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
-
 class Resource(models.Model):
     # Create your models here.
     name = models.CharField(max_length=200)
@@ -26,7 +25,3 @@ class Resource(models.Model):
 
     def full_description(self):
         return self.name + self.link
-
-    @staticmethod
-    def say_hello():
-        return "hello world"

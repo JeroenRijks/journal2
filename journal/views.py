@@ -33,7 +33,7 @@ def new_tip(request, res_id=None):
         resource = None
     tag_form = TagForm()
 
-    if request.POST:        # This is for the red submit button
+    if request.method == 'POST':     # This is for the red submit button
         if resource:        # If it exists, edit that instance. Else make a new one.
             form = ResourceForm(data=request.POST, instance=resource)
         else:
@@ -41,7 +41,6 @@ def new_tip(request, res_id=None):
         if form.is_valid():
             form.save()
             return redirect('journal:home')
-
     else:
         if resource:
             form = ResourceForm(instance=resource)
@@ -51,12 +50,11 @@ def new_tip(request, res_id=None):
 
 
 def delete_resource(request, res_id=None):
-    if res_id:                  # TODO Error handling here?
+    if res_id:
         resource = Resource.objects.get(id=res_id)
     else:
         resource = None
-    if request.POST:
-        print(request.POST)
+    if request.method == 'POST':
         if resource:
             resource.delete()
     return redirect('journal:home')
@@ -69,6 +67,8 @@ def AJAX_tag_create(request):
     full_response = {
     "success": True,
     }
+
+    print(JsonResponse(data=full_response, safe=False))
     return JsonResponse(data=full_response, safe=False)
 
 
@@ -107,7 +107,7 @@ class TagEdit(View):
                 form_class = TagForm(request.POST)
         else:
             form_class = TagForm(request.POST)
-
+            print('post on new tag object being made')
         if form_class.is_valid():
             form_class.save()
         return redirect('journal:tag_list')

@@ -21,8 +21,12 @@ List of tags in my journal, by {{name}}.
             <tr>
                 <td><a href="{% url 'journal:tag_edit' tag_id=tag.id %}" >{{tag.name}}</td>
                 <td>{% for item in tag.get_related_resources %}
-                    {{item.name}},
+                    {{item.name}}
+                    {% if not forloop.last %}
+                    , {% endif %}
+                    {% empty %} No tags
                     {% endfor %}
+
                 </td>
                 <td><form method="post" action="{% url 'journal:deletetag' tag_id=tag.id %}">
                     {% csrf_token %}<button type="submit"> <i class="fa fa-trash"></i></button>
