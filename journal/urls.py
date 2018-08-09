@@ -29,5 +29,8 @@ urlpatterns = [
     url(r'^AJAX_tag_create/$', views.AJAX_tag_create, name='AJAX_tag_create'),
     url(r'^tag_edit/$', views.TagEdit.as_view(), name='tag_edit'),
     url(r'^tag_edit/(?P<tag_id>[0-9]+)$', views.TagEdit.as_view(), name='tag_edit'),
+    url(r'^api/tag/$', views.TagListCreate.as_view(), name='tag_api'),
+    url(r'^api/resource/$', views.ResourceListCreate.as_view(), name='resource_api'),
 
 ]
+
