@@ -6,7 +6,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 from journal.models import Resource, Tag
 from journal.forms import ResourceForm, TagForm
-
+from journal.serializers import ResourceSerializer, TagSerializer
+from rest_framework import generics
 
 def home(request,tag_id=None):
 
@@ -100,3 +101,12 @@ class TagEdit(View):
         if form_class.is_valid():
             form_class.save()
         return redirect('journal:tag_list')
+
+class ResourceListCreate(generics.ListCreateAPIView):
+    queryset = Resource.objects.all()
+    serializer_class = ResourceSerializer
+
+
+class TagListCreate(generics.ListCreateAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
