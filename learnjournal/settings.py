@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'am@=h-a@zxba+0%dl175v2g5kkpwqhj7m*+fzkx=5@m%o)()1_'
+SECRET_KEY = os.getenv('SECRET_KEY', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,11 +78,11 @@ WSGI_APPLICATION = 'learnjournal.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', #tells you the type of server
-        'NAME': 'myproject', #name of the mySQL database
-        'USER': 'jeroen',   #used to obtain access to the database
-        'PASSWORD': '4rr0w2D4Kn33', #used to obtain access to the database
-        'HOST': 'localhost', #where server is stored
-        'PORT': '',
+        'NAME': os.getenv('RDS_DB_NAME','learnjournal'), #name of the mySQL database
+        'USER': os.getenv('RDS_USERNAME',None),   #used to obtain access to the database
+        'PASSWORD': os.getenv('RDS_PASSWORD',None), #used to obtain access to the database
+        'HOST': os.getenv('RDS_HOSTNAME', '127.0.0.1'), #where server is stored
+        'PORT': os.getenv('RDS_PORT', '5432'),
     }
 }
 
@@ -124,3 +124,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+try:
+    from .local import *
+except ImportError:
+    pass

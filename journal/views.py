@@ -12,8 +12,8 @@ def home(request,tag_id=None):
 
     resources = Resource.objects.all()
     if tag_id:
-        resources=resources.filter(tags=tag_id)
-        tag = Tag.objects.get(id=tag_id)
+        resources = resources.filter(tags=tag_id)
+        tag = Tag.objects.get(id=tag_id)            #Try Except
     else:
         tag=None
     return render(request, 'home.html', {'name': 'Jeroen','items': resources,'tag':tag})
@@ -21,9 +21,12 @@ def home(request,tag_id=None):
 
 def newresource(request, res_id=None):
     if res_id:
-        resource = Resource.objects.get(id=res_id)
+        try:
+            resource = Resource.objects.get(id=res_id)
+        except Resource.DoesNotExist:
+            resource = None
     else:
-        resource=None
+        resource = None
     tag_form = TagForm()
 
     if request.POST:      # This is for the red submit button
@@ -48,7 +51,7 @@ def deleteresource(request, res_id=None):
     else:
         resource = None
     if request.POST:
-        print (request.POST)
+        print(request.POST)
         if resource:
             resource.delete()
     return redirect('journal:home')
