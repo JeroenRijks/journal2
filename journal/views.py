@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib.auth import authenticate, login
 from journal.models import Resource, Tag
 from journal.forms import ResourceForm, TagForm
 from journal.serializers import ResourceSerializer, TagSerializer
@@ -121,3 +122,29 @@ class ResourceListCreate(generics.ListCreateAPIView):
 class TagListCreate(generics.ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+class Register(View):
+    form_class = LoginForm
+
+    # display empty form
+    def get(self, request):
+        form = self.form_class(None)
+        return render(request,login.html, {'form' : form})
+
+    # process form data
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            user = form.save(commit = False)
+            username = request.POST['username']
+            password = request.POST['password']
+            user.set_password(password)
+            user.save()
+            user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('journal:home')
+        else:
+            print ('failed login')
+        return render(request, 'login.html', {'name' : 'Jeroen'})

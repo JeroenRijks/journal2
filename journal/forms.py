@@ -18,3 +18,10 @@ class TagForm(ModelForm):
     class Meta:
         model = Tag
         fields = ['name']
+
+class UserForm(ModelForm):
+    password = forms.CharField(widget.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ['username','email','password']

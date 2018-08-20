@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^resources/(?P<tag_id>[0-9]+)$', views.home, name='home'),
     url(r'^resources/$', views.home, name='home'),
+    url(r'^login/$', views.login, name='login'),
     url(r'^tag_list/$', views.TagList.as_view(), name='tag_list'),
     url(r'^deletetag/(?P<tag_id>[0-9]+)$', views.TagList.as_view(), name='deletetag'),
     url(r'^newtip/$', views.new_tip, name='resource'),
