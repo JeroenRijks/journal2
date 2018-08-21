@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth import authenticate, login
 from journal.models import Resource, Tag
-from journal.forms import ResourceForm, TagForm
+from journal.forms import ResourceForm, TagForm, UserForm
 from journal.serializers import ResourceSerializer, TagSerializer
 from rest_framework import generics
 
@@ -87,10 +87,10 @@ class TagList(View):
 
 class TagEdit(View):
     def get(self, request, tag_id=None):
+        taginfo = None
         if tag_id:
             try:
                 taginfo = Tag.objects.get(id=tag_id)
-                form_class = TagForm(instance = taginfo)
             except Tag.DoesNotExist:
                 taginfo = None
                 form_class = TagForm(instance = taginfo) # lil change
@@ -124,27 +124,27 @@ class TagListCreate(generics.ListCreateAPIView):
     serializer_class = TagSerializer
 
 class Register(View):
-    form_class = LoginForm
+    form_class = UserForm
 
     # display empty form
     def get(self, request):
         form = self.form_class(None)
-        return render(request,login.html, {'form' : form})
+        return render(request, 'register.html', {'form' : form})
 
     # process form data
     def post(self, request):
         form = self.form_class(request.POST)
+
         if form.is_valid():
             user = form.save(commit = False)
-            username = request.POST['username']
-            password = request.POST['password']
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
             user.set_password(password)
             user.save()
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return render(request, 'journal:home', {'name': 'Jeroen'})
 
-        if user is not None:
-            login(request, user)
-            return redirect('journal:home')
-        else:
-            print ('failed login')
-        return render(request, 'login.html', {'name' : 'Jeroen'})
+        return render(request, 'register.html', {'name' : 'Jeroen'})
