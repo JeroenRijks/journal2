@@ -20,7 +20,7 @@ def home(request,tag_id=None):
             pass
     if tag:
         resources = resources.filter(tags=tag_id)
-    return render(request, 'home.html', {'name': 'Jeroen','items': resources,'tag':tag})
+    return render(request, 'home.html', {'name': 'Jeroen', 'items': resources, 'tag': tag})
 
 
 def new_tip(request, res_id=None):
@@ -46,7 +46,7 @@ def new_tip(request, res_id=None):
             form = ResourceForm(instance=resource)
         else:
             form = ResourceForm()
-    return render(request, 'tip_edit.html', {'tagform':tag_form, 'form':form, 'name': 'Jeroen'})
+    return render(request, 'tip_edit.html', {'tagform': tag_form, 'form': form, 'name': 'Jeroen'})
 
 
 def delete_resource(request, res_id=None):
@@ -107,9 +107,9 @@ class TagEdit(View):
                 form_class = TagForm(request.POST)
         else:
             form_class = TagForm(request.POST)
-            print('post on new tag object being made')
         if form_class.is_valid():
             form_class.save()
+
         return redirect('journal:tag_list')
 
 
