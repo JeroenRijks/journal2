@@ -92,7 +92,7 @@ class TagEdit(View):
                 form_class = TagForm(instance = taginfo)
             except Tag.DoesNotExist:
                 taginfo = None
-                form_class = TagForm(instance = taginfo)
+                form_class = TagForm(instance = taginfo) # lil change
         else:
             taginfo = None
             form_class = TagForm(instance = taginfo)
