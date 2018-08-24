@@ -1,4 +1,11 @@
-.right {
-    color: red;
+.right_white {
+    color: white;
     text-align: right;
 }
+
+.right_p_tag {
+    color: white;
+    text-align: right;
+
+}
+

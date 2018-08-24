@@ -180,3 +180,11 @@ class Register(UserView):
             user.save()
             self.auth_login(request)
         return redirect('journal:home')
+
+
+def logoutview(request):
+    print('logout view called')
+    logout(request, user)  # FIND CORRECT COMMAND FOR LOGGING OUT
+    print('logout command has been run')
+
+    return redirect('journal:home')

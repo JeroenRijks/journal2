@@ -29,11 +29,11 @@
   <a class="navbar-brand" href="{% url 'journal:tag_list' %}">List of tags</a>
   <a class="navbar-brand" href="{% url 'journal:tag_edit' %}">Create a tag</a>
   {% if user.is_authenticated %}
-        <a>Welcome, {{user.username}}!</a>
-        <!--<a class=""></a>-->
+        <span class="right_white"> Welcome, {{user.username}}!</span>
+        <a class="right_white" href="{% url 'journal:logout' %}">Logout</a>
   {% else %}
-        <a class="right" href="{% url 'journal:register' %}">Register</a>
-        <a class="right" href="{% url 'journal:login' %}">Login</a>
+        <a class="right_white" href="{% url 'journal:register' %}">Register</a>
+        <a class="right_white" href="{% url 'journal:login' %}">Login</a>
   {% endif %}
 </nav>
 </head>
