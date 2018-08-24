@@ -13,6 +13,7 @@ from rest_framework import generics
 
 def home(request,tag_id=None):
     resources = Resource.objects.all()
+    # resources = Resource.objects.filter(created_by=request.user)
     tag = None
     if tag_id:
         try:
@@ -33,14 +34,19 @@ def new_tip(request, res_id=None):
     else:
         resource = None
     tag_form = TagForm()
-
     if request.method == 'POST':     # This is for the red submit button
         if resource:        # If it exists, edit that instance. Else make a new one.
             form = ResourceForm(data=request.POST, instance=resource)
         else:
             form = ResourceForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            res = form.save(commit=False)
+            if request.user.is_authenticated():
+                if resource:
+                    res.last_updated_by = request.user
+                else:
+                    res.created_by = request.user
+            res.save()
             return redirect('journal:home')
     else:
         if resource:
@@ -123,28 +129,54 @@ class TagListCreate(generics.ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
-class Register(View):
+
+class UserView(View):
     form_class = UserForm
+    user = None
+    username = None
+    password = None
+    action = 'empty string'
 
     # display empty form
     def get(self, request):
         form = self.form_class(None)
-        return render(request, 'register.html', {'form' : form})
+        return render(request, 'register.html', {'form': form, 'action': self.action})
 
-    # process form data
     def post(self, request):
         form = self.form_class(request.POST)
 
         if form.is_valid():
-            user = form.save(commit = False)
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user.set_password(password)
-            user.save()
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return render(request, 'journal:home', {'name': 'Jeroen'})
+            self.user = form.save(commit=False)
+            self.username = form.cleaned_data['username']
+            self.password = form.cleaned_data['password']
 
-        return render(request, 'register.html', {'name' : 'Jeroen'})
+    def auth_login(self, request):
+        user = authenticate(username=self.username, password=self.password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+
+
+class Login(UserView):
+
+    action = 'Login'
+
+    def post(self, request):
+        super(Login, self).post(request)
+        self.auth_login(request)
+        return redirect('journal:home')
+
+
+class Register(UserView):
+
+    action = 'Register'
+
+    # process form data
+    def post(self, request):
+        super(Register, self).post(request)
+        user = self.user
+        if user:
+            user.set_password(self.password)
+            user.save()
+            self.auth_login(request)
+        return redirect('journal:home')

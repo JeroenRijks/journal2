@@ -19,6 +19,8 @@ class Resource(models.Model):
     link = models.URLField(default=None)
     tip = models.CharField(max_length=2048, default=None)
     tags = models.ManyToManyField(Tag)
+    created_by = models.ForeignKey(User, related_name='creations', default=None, null=True, blank=True)
+    last_updated_by = models.ForeignKey(User, related_name='updated_tips', default=None, null=True, blank=True)
 
     def __str__(self):
         return self.name

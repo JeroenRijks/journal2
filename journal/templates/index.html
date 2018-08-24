@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <script
             src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" \>
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" \>
+    <link rel="stylesheet" href="{% static 'css/journal.css' %}" \>
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -26,6 +28,13 @@
   <a class="navbar-brand" href="{% url 'journal:resource' %}">Create a tip</a>
   <a class="navbar-brand" href="{% url 'journal:tag_list' %}">List of tags</a>
   <a class="navbar-brand" href="{% url 'journal:tag_edit' %}">Create a tag</a>
+  {% if user.is_authenticated %}
+        <a>Welcome, {{user.username}}!</a>
+        <!--<a class=""></a>-->
+  {% else %}
+        <a class="right" href="{% url 'journal:register' %}">Register</a>
+        <a class="right" href="{% url 'journal:login' %}">Login</a>
+  {% endif %}
 </nav>
 </head>
 
