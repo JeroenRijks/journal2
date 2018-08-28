@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from journal.models import Resource, Tag
-from journal.forms import ResourceForm, TagForm, UserForm
+from journal.forms import ResourceForm, TagForm, UserForm, LoginForm
 from journal.serializers import ResourceSerializer, TagSerializer
 from rest_framework import generics
 
@@ -132,6 +132,7 @@ class TagListCreate(generics.ListCreateAPIView):
 
 class UserView(View):
     form_class = UserForm
+    form = None
     user = None
     username = None
     password = None
@@ -144,26 +145,31 @@ class UserView(View):
 
     def post(self, request):
         form = self.form_class(request.POST)
-
         if form.is_valid():
-            self.user = form.save(commit=False)
             self.username = form.cleaned_data['username']
             self.password = form.cleaned_data['password']
+            self.form = form
+        else:
+            print(form.errors)
 
     def auth_login(self, request):
+        print(self.username)
         user = authenticate(username=self.username, password=self.password)
         if user is not None:
             if user.is_active:
+                print('passed if statements')
                 login(request, user)
 
 
 class Login(UserView):
-
+    form_class = LoginForm
     action = 'Login'
 
     def post(self, request):
+
         super(Login, self).post(request)
         self.auth_login(request)
+        print('logged in')
         return redirect('journal:home')
 
 
@@ -174,7 +180,8 @@ class Register(UserView):
     # process form data
     def post(self, request):
         super(Register, self).post(request)
-        user = self.user
+
+        user = self.form.save(commit=False) if self.form else None
         if user:
             user.set_password(self.password)
             user.save()
@@ -184,7 +191,7 @@ class Register(UserView):
 
 def logoutview(request):
     print('logout view called')
-    logout(request, user)  # FIND CORRECT COMMAND FOR LOGGING OUT
+    logout(request)
     print('logout command has been run')
 
     return redirect('journal:home')
