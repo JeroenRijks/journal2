@@ -75,7 +75,6 @@ def AJAX_tag_create(request):
     "success": True,
     }
 
-    print(JsonResponse(data=full_response, safe=False))
     return JsonResponse(data=full_response, safe=False)
 
 
@@ -98,22 +97,18 @@ class TagEdit(View):
             try:
                 taginfo = Tag.objects.get(id=tag_id)
             except Tag.DoesNotExist:
-                taginfo = None
-                form_class = TagForm(instance = taginfo) # lil change
-        else:
-            taginfo = None
-            form_class = TagForm(instance = taginfo)
-        return render(request, 'tag_edit.html', {'tag': taginfo, 'tag_form' : form_class})
+                pass
+        form_class = TagForm(instance=taginfo)
+        return render(request, 'tag_edit.html', {'tag': taginfo, 'form': form_class})
 
     def post(self, request, tag_id=None):
+        taginfo = None
         if tag_id:     # Edit or create
             try:
                 taginfo = Tag.objects.get(id=tag_id)
-                form_class = TagForm(request.POST, instance = taginfo)
             except Tag.DoesNotExist:
-                form_class = TagForm(request.POST)
-        else:
-            form_class = TagForm(request.POST)
+                pass
+        form_class = TagForm(request.POST, instance=taginfo)
         if form_class.is_valid():
             form_class.save()
 
@@ -149,15 +144,11 @@ class UserView(View):
             self.username = form.cleaned_data['username']
             self.password = form.cleaned_data['password']
             self.form = form
-        else:
-            print(form.errors)
 
     def auth_login(self, request):
-        print(self.username)
         user = authenticate(username=self.username, password=self.password)
         if user is not None:
             if user.is_active:
-                print('passed if statements')
                 login(request, user)
 
 
@@ -169,7 +160,6 @@ class Login(UserView):
 
         super(Login, self).post(request)
         self.auth_login(request)
-        print('logged in')
         return redirect('journal:home')
 
 
@@ -190,8 +180,6 @@ class Register(UserView):
 
 
 def logoutview(request):
-    print('logout view called')
     logout(request)
-    print('logout command has been run')
 
     return redirect('journal:home')

@@ -17,6 +17,7 @@ Main page in my journal, by {{name}}.
           <th scope="col">Tags</th>
           <th scope="col">Link</th>
           <th scope="col">Created by</th>
+          <th scope="col">Last updated by</th>
           <th scope="col">Delete</th>
         </tr>
     </thead>
@@ -38,6 +39,12 @@ Main page in my journal, by {{name}}.
                         {{item.created_by.username}}
                     {% else %}
                         Anonymous
+                    {% endif %}
+                </td>
+                <td>{% if item.last_updated_by %}
+                        {{item.last_updated_by.username}}
+                    {% else %}
+                        Unedited tip
                     {% endif %}
                 </td>
                 <td><form method="post" action="{% url 'journal:deleteresource' res_id=item.id %}">
