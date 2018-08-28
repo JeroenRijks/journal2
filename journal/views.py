@@ -25,14 +25,14 @@ def home(request,tag_id=None):
     return render(request, 'home.html', {'name': 'Jeroen', 'items': resources, 'tag': tag})
 
 
-def new_tip(request, res_id=None):
+def tip_edit(request, res_id=None):  # RENAME
+
+    resource = None
     if res_id:
         try:
             resource = Resource.objects.get(id=res_id)
         except Resource.DoesNotExist:
-            resource = None
-    else:
-        resource = None
+            pass
     tag_form = TagForm()
     if request.method == 'POST':     # This is for the red submit button
         if resource:        # If it exists, edit that instance. Else make a new one.
@@ -41,12 +41,14 @@ def new_tip(request, res_id=None):
             form = ResourceForm(data=request.POST)
         if form.is_valid():
             res = form.save(commit=False)
-            if request.user.is_authenticated():
-                if resource:
-                    res.last_updated_by = request.user
-                else:
-                    res.created_by = request.user
+            if hasattr(request, 'user'):
+                if request.user.is_authenticated():
+                    if resource:
+                        res.last_updated_by = request.user
+                    else:
+                        res.created_by = request.user
             res.save()
+            form.save_m2m()
             return redirect('journal:home')
     else:
         if resource:

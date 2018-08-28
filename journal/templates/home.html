@@ -35,17 +35,19 @@ Main page in my journal, by {{name}}.
                     {% endfor %}
                 </td>
                 <td><a class="btn btn-danger" href="{{item.link}}">{{item.name}}</a></td>
-                <td>{% if item.created_by %}
-                        {{item.created_by.username}}
-                    {% else %}
-                        Anonymous
-                    {% endif %}
+                <td>
+                    <!--{% if item.created_by %}-->
+                        <!--{{item.created_by.username}}-->
+                    <!--{% else %}-->
+                    Anonymous
+                    <!--{% endif %}-->
                 </td>
-                <td>{% if item.last_updated_by %}
-                        {{item.last_updated_by.username}}
-                    {% else %}
+                <td>
+                    <!--{% if item.last_updated_by %}-->
+                        <!--{{item.last_updated_by.username}}-->
+                    <!--{% else %}-->
                         Unedited tip
-                    {% endif %}
+                    <!--{% endif %}-->
                 </td>
                 <td><form method="post" action="{% url 'journal:deleteresource' res_id=item.id %}">
                 {% csrf_token %}
