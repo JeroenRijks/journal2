@@ -1,4 +1,4 @@
-from django.forms import ModelForm, CharField, PasswordInput
+from django.forms import Form, ModelForm, CharField, PasswordInput
 from django.contrib.auth.models import User
 from journal.models import Resource, Tag
 
@@ -29,3 +29,8 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+
+
+class LoginForm(Form):
+    username = CharField(max_length=100, help_text=False)
+    password = CharField(widget=PasswordInput())
