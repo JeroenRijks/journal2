@@ -1,19 +1,29 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
-from django.test import TestCase, RequestFactory
-from django.urls import reverse, resolve
+from django.test import TestCase, RequestFactory, Client
 from journal.models import Resource, Tag
+from django.contrib.auth.models import User
 import json
-from journal.views import home, tip_edit, delete_resource, AJAX_tag_create, TagEdit, TagList
+from journal.views import *
 from journal.forms import ResourceForm, TagForm
-
+from django.urls import reverse, resolve
 
 # Create your tests here.
-class TestResources(TestCase):
+
+
+class TestObjects(TestCase):
 
     def setUp(self):
 
+        self.credentials = {
+            'username' : u'logged_user',
+            'email' : u'logged_user@logged_user.com',
+            'password' : u'password',
+        }
+        User.objects.create_user(self.credentials)
+        # LOG IN THIS USER
+
+        self.factory = RequestFactory()
         # Create data
         tag = Tag.objects.create(
             name="Django"
@@ -28,10 +38,13 @@ class TestResources(TestCase):
             link='http://www.google.com',
             tip='make searches'
         )
+
+        logged_user = User.objects.create_user(username='logged_user', email='logged_user@logged_user.com',password='password')
+        login = self.client.login(username='logged_user', password='password')
+
         resource.tags.add(tag)  # Add Django tag to Facebook resource
         self.res_id = resource.id
         self.tag_id = tag.id
-        self.factory = RequestFactory()
 
         # Post data
         self.tag_post_data = {
@@ -50,6 +63,7 @@ class TestResources(TestCase):
             "tags": [unicode(tag.id)],
         }
 
+
     def test_resources_create(self):
         request = self.factory.post('/newtip/', self.resource_post_data)
         response = tip_edit(request)
@@ -59,7 +73,7 @@ class TestResources(TestCase):
     def test_resources_show(self):
         request = self.factory.get('/')
         response = home(request)
-        self.assertEqual(response.status_code,200)  # Success status
+        self.assertEqual(response.status_code, 200)  # Success status
         self.assertContains(response, 'Facebook')
         self.assertContains(response, 'www.google.com')
 
@@ -67,7 +81,7 @@ class TestResources(TestCase):
         request = self.factory.post('/deleteresource/' + str(self.res_id))
         response = delete_resource(request, self.res_id)
         self.assertEqual(response.status_code, 302)
-        self.assertEquals(Resource.objects.filter(name='Facebook').count(), 0)
+        self.assertEqual(Resource.objects.filter(name='Facebook').count(), 0)
 
     def test_AJAX_add_tag(self):   # See whether Python is connected to Facebook after test
         request=self.factory.post('/AJAX_tag_create/', self.tag_AJAX_data)
@@ -75,6 +89,7 @@ class TestResources(TestCase):
         json_string=response.content
         data = json.loads(json_string)
         self.assertEqual(data['success'], True)
+        self.assertEqual(response.status_code, 200)
 
     def test_tags_show(self):
         request = self.factory.get('/tag_list/')
@@ -108,3 +123,63 @@ class TestResources(TestCase):
         response = TagList.as_view()(request, tag_id=self.tag_id)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Tag.objects.filter(name='Django').count(), 0)
+
+
+class TestLogin(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.credentials = {
+            'username': u'unlogged_user',
+            'email': u'unlogged_user@unlogged_user.com',
+            'password': u'password',
+        }
+        User.objects.create_user(self.credentials)
+
+    def test_login(self):  #
+        request = self.factory.post('/login/', self.credentials)
+        response = Login.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+    # Can I test if the redirect is to home? (assertRedirects)
+
+
+class TestRegister(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.credentials = {
+            'username': u'new_user',
+            'email': u'new_user@new_user.com',
+            'password': u'password',
+        }
+
+    def test_register(self):
+        request = self.factory.post('/register/', self.credentials)
+        response = Register.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+    # Can I test if the redirect is to home? (assertRedirects)
+
+
+class TestLoggedIn(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.credentials = {
+            'username': u'new_user',
+            'email': u'new_user@new_user.com',
+            'password': u'password',
+        }
+        User.objects.create_user(self.credentials)
+        Client().login(username='new_user', password='password')
+
+    def test_logged_in_homepage(self):
+        request = self.factory.get('/')
+        response = home(request)
+        self.assertContains(response, 'new')
+        self.assertEqual(response.status_code, 200)
+
+    def test_logout(self):
+        request = self.factory.logoutview('/logout/')
+        response = logoutview(request)
+        # self.assertContains(response)
+        self.assertEqual(response.status_code, 302)
