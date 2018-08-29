@@ -136,7 +136,7 @@ class UserView(View):
     action = 'empty string'
 
     # display empty form
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         form = self.form_class(None)
         return render(request, 'register.html', {'form': form, 'action': self.action})
 
@@ -158,8 +158,12 @@ class Login(UserView):
     form_class = LoginForm
     action = 'Login'
 
-    def post(self, request):
+    def get(self, request):
+        if hasattr(request, 'user') and request.user.is_authenticated:
+            return redirect('journal:home')
+        return super(Login, self).get(request)
 
+    def post(self, request):
         super(Login, self).post(request)
         self.auth_login(request)
         return redirect('journal:home')
@@ -182,6 +186,6 @@ class Register(UserView):
 
 
 def logoutview(request):
-    logout(request)
-
+    if hasattr(request, 'user'):
+        logout(request)
     return redirect('journal:home')

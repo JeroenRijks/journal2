@@ -15,14 +15,6 @@ class TestObjects(TestCase):
 
     def setUp(self):
 
-        self.credentials = {
-            'username' : u'logged_user',
-            'email' : u'logged_user@logged_user.com',
-            'password' : u'password',
-        }
-        User.objects.create_user(self.credentials)
-        # LOG IN THIS USER
-
         self.factory = RequestFactory()
         # Create data
         tag = Tag.objects.create(
@@ -38,9 +30,6 @@ class TestObjects(TestCase):
             link='http://www.google.com',
             tip='make searches'
         )
-
-        logged_user = User.objects.create_user(username='logged_user', email='logged_user@logged_user.com',password='password')
-        login = self.client.login(username='logged_user', password='password')
 
         resource.tags.add(tag)  # Add Django tag to Facebook resource
         self.res_id = resource.id
@@ -62,7 +51,6 @@ class TestObjects(TestCase):
             "tip": u'use for forums',
             "tags": [unicode(tag.id)],
         }
-
 
     def test_resources_create(self):
         request = self.factory.post('/newtip/', self.resource_post_data)
@@ -139,8 +127,9 @@ class TestLogin(TestCase):
     def test_login(self):  #
         request = self.factory.post('/login/', self.credentials)
         response = Login.as_view()(request)
+        response.client = Client()
+        self.assertRedirects(response, '/resources/')
         self.assertEqual(response.status_code, 302)
-    # Can I test if the redirect is to home? (assertRedirects)
 
 
 class TestRegister(TestCase):
@@ -156,8 +145,9 @@ class TestRegister(TestCase):
     def test_register(self):
         request = self.factory.post('/register/', self.credentials)
         response = Register.as_view()(request)
+        response.client = Client()
+        self.assertRedirects(response, '/resources/')
         self.assertEqual(response.status_code, 302)
-    # Can I test if the redirect is to home? (assertRedirects)
 
 
 class TestLoggedIn(TestCase):
@@ -179,7 +169,8 @@ class TestLoggedIn(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_logout(self):
-        request = self.factory.logoutview('/logout/')
+        request = self.factory.get('/logout/')
         response = logoutview(request)
-        # self.assertContains(response)
+        response.client = Client()
+        self.assertRedirects(response, '/resources/')
         self.assertEqual(response.status_code, 302)
