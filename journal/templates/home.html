@@ -39,9 +39,9 @@
                 <td><a class="btn btn-danger" href="{{item.link}}">{{item.name}}</a></td>
                 <td>
                     {% if item.created_by %}
-                        {{item.created_by.username}}
+                        <span class="created-text">{{item.created_by.username}}</span>
                     {% else %}
-                    Anonymous
+                        Anonymous
                     {% endif %}
                 </td>
                 <td>
@@ -53,7 +53,7 @@
                 </td>
                 <td><form method="post" action="{% url 'journal:deleteresource' res_id=item.id %}">
                 {% csrf_token %}
-                <button class="fa fa-trash" type="submit"></button>
+                <button class="fa fa-trash" type="submit" name="{{item.id}}"></button>
                 </form></td>
 
 
