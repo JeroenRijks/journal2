@@ -9,10 +9,12 @@ from journal.models import Resource, Tag
 from journal.forms import ResourceForm, TagForm, UserForm, LoginForm
 from journal.serializers import ResourceSerializer, TagSerializer
 from rest_framework import generics
+from emoji import emojize
 
 
 def home(request,tag_id=None):
     resources = Resource.objects.all()
+    emoji = emojize(":gorilla:")
     # resources = Resource.objects.filter(created_by=request.user)
     tag = None
     if tag_id:
@@ -22,7 +24,7 @@ def home(request,tag_id=None):
             pass
     if tag:
         resources = resources.filter(tags=tag_id)
-    return render(request, 'home.html', {'name': 'Jeroen', 'items': resources, 'tag': tag})
+    return render(request, 'home.html', {'name': 'Jeroen', 'emoji': emoji, 'items': resources, 'tag': tag})
 
 
 def tip_edit(request, res_id=None):  # RENAME
@@ -117,6 +119,8 @@ class TagEdit(View):
         return redirect('journal:tag_list')
 
 
+# APIs
+
 class ResourceListCreate(generics.ListCreateAPIView):
     queryset = Resource.objects.all()
     serializer_class = ResourceSerializer
@@ -125,6 +129,18 @@ class ResourceListCreate(generics.ListCreateAPIView):
 class TagListCreate(generics.ListCreateAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+# Trying to make an api that can select by tag id
+# class ResourceListSelect(generics.ListCreateAPIView, tag_id=None):
+#     queryset = Resource.objects.all()
+#     if tag_id:
+#         try:
+#             queryset = Resource.objects.get(id=tag_id)
+#         except Tag.DoesNotExist:
+#             pass
+#     serializer_class = ResourceSerializer
+
+# User Authentication
 
 
 class UserView(View):

@@ -1,4 +1,4 @@
-"""learnjournal URL Configuration
+"""learnjournal URL Configurationneric message. And a lot has changed since this question was posted. No more 32-bit versions are considered modern, for one. I posted the simple answer below that works in July 2017. Simply install that modul
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/

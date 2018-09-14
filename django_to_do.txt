@@ -1,0 +1,15 @@
+DJANGO TO DO LIST 
+
+[X]   Clean up
+[X]   	Refactor
+[X]   Error handling
+[X]   Unit testing
+[X]   Behaviour testing
+[X]   Users
+[X]   	Login page
+[X]   	Authentication
+[-]   	Up votes
+[-]   	Add option to use favourites to customise home page
+[-]	User profiles showing favourites and upvoted tips
+[-]   Email most upvoted to all users (MailChimp)
+
